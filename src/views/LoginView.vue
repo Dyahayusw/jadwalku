@@ -13,6 +13,7 @@ const remember = ref(false)
 const showPassword = ref(false)
 const hasError = ref(false)
 const isLoading = ref(false)
+const isExiting = ref(false) // State untuk efek transisi smooth
 
 onMounted(() => {
   const remembered = localStorage.getItem('rememberedEmail')
@@ -28,6 +29,9 @@ function clearError() {
 
 // Fungsi Login terkoneksi Supabase Database
 async function handleLogin() {
+  isLoading.value = true
+  clearError()
+
   try {
     // Pastikan kueri mengarah langsung ke tabel users dengan benar
     const { data, error } = await supabase
@@ -42,14 +46,22 @@ async function handleLogin() {
     if (data) {
       // Simpan sesi user yang aktif
       login(data.email) // atau data.name sesuai struktur tabelmu
-      alert('Login berhasil!')
-      router.push('/dashboard')
+      
+      // Memicu efek transisi smooth sebelum pindah halaman
+      isExiting.value = true
+      
+      setTimeout(() => {
+        router.push('/dashboard')
+      }, 300) // Waktu delay disesuaikan dengan durasi CSS transition
     } else {
-      alert('Email atau kata sandi salah!')
+      // Menampilkan error UI, bukan alert browser
+      hasError.value = true
     }
   } catch (err) {
     console.error('Terjadi kesalahan:', err.message)
-    alert('Gagal melakukan login.')
+    hasError.value = true
+  } finally {
+    isLoading.value = false
   }
 }
 
@@ -59,7 +71,7 @@ function handleForgotPassword() {
 </script>
 
 <template>
-  <div class="page-login">
+  <div class="page-login" :class="{ 'fade-out': isExiting }">
     <!-- SISI KIRI: BRANDING & FITUR -->
     <div class="left-panel">
       <div class="brand">
