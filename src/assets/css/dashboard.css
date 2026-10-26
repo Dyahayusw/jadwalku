@@ -20,12 +20,18 @@
 /* Sidebar Kiri */
 .page-dashboard .sidebar {
     width: 260px;
+    height: 100vh;
+    max-height: 100vh;
     background-color: #0F172A;
     color: #94A3B8;
-    padding: 24px 16px;
+    padding: 20px 16px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    position: sticky;
+    top: 0;
+    overflow: hidden;
+    flex-shrink: 0;
 }
 
 .page-dashboard .sidebar-brand {
@@ -86,13 +92,27 @@
 
 .page-dashboard .semester-select {
     width: 100%;
-    padding: 10px;
     background-color: #1E293B;
+    color: #F8FAFC;
     border: 1px solid #334155;
-    color: #FFFFFF;
     border-radius: 8px;
+    padding: 8px 12px;
     font-size: 13px;
+    font-weight: 600;
     outline: none;
+    cursor: pointer;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.page-dashboard .semester-select:focus {
+    border-color: #3B82F6;
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+}
+
+.page-dashboard .semester-select option {
+    background-color: #1E293B;
+    color: #F8FAFC;
+    padding: 8px;
 }
 
 .page-dashboard .category-list {
@@ -108,6 +128,12 @@
     align-items: center;
     font-size: 13px;
     color: #CBD5E1;
+}
+
+.page-dashboard .category-hover-item:hover {
+  background-color: #1E293B;
+  color: #FFFFFF;
+  transition: background-color 0.2s ease;
 }
 
 .page-dashboard .dot {
@@ -151,6 +177,73 @@
     line-height: 1.4;
 }
 
+/* Profil User di Sidebar */
+.page-dashboard .sidebar .user-profile {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  overflow: hidden;
+  width: 100%;
+}
+
+.page-dashboard .sidebar .user-avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #0F172A;
+  color: #FFFFFF;
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.page-dashboard .sidebar .user-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.page-dashboard .sidebar .user-profile > div:not(.user-avatar) {
+  min-width: 0;
+  flex: 1;
+}
+
+.page-dashboard .sidebar .user-name {
+  font-size: 12px;
+  font-weight: 600;
+  color: #FFFFFF;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.page-dashboard .sidebar .user-role {
+  font-size: 11px;
+  color: #94A3B8;
+}
+
+.page-dashboard .btn-logout-sidebar {
+    width: 100%;
+    background-color: #1E293B;
+    color: #F87171;
+    border: 1px solid #334155;
+    padding: 10px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.page-dashboard .btn-logout-sidebar:hover {
+    background-color: #7F1D1D;
+    color: #FFFFFF;
+}
+
 /* Konten Utama */
 .page-dashboard .main-content {
     flex: 1;
@@ -170,6 +263,23 @@
     border-bottom: 1px solid #E2E8F0;
 }
 
+/* Tombol Menu Toggle untuk Mobile */
+.page-dashboard .menu-toggle {
+    display: none;
+    flex-shrink: 0;
+    width: 38px;
+    height: 38px;
+    align-items: center;
+    justify-content: center;
+    background: #F8FAFC;
+    border: 1px solid #E2E8F0;
+    border-radius: 8px;
+    font-size: 18px;
+    cursor: pointer;
+    color: #0F172A;
+    margin-right: 8px;
+}
+
 .page-dashboard .search-container {
     position: relative;
     width: 320px;
@@ -185,12 +295,129 @@
 
 .page-dashboard .search-input {
     width: 100%;
-    padding: 9px 12px 9px 36px;
+    padding: 9px 32px 9px 36px;
     background-color: #F8FAFC;
     border: 1px solid #E2E8F0;
     border-radius: 8px;
     font-size: 13px;
     outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.page-dashboard .search-input:focus {
+    border-color: #2563EB;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+    background: #FFFFFF;
+}
+
+.page-dashboard .search-clear {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: #E2E8F0;
+    border: none;
+    color: #475569;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    font-size: 10px;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.page-dashboard .search-suggest {
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0;
+    right: 0;
+    background: #FFFFFF;
+    border: 1px solid #E2E8F0;
+    border-radius: 12px;
+    box-shadow: 0 12px 30px -8px rgba(15, 23, 42, 0.25);
+    list-style: none;
+    margin: 0;
+    padding: 6px;
+    z-index: 200;
+}
+
+.page-dashboard .search-empty {
+    padding: 14px;
+    font-size: 12px;
+    color: #64748B;
+}
+
+.page-dashboard .suggest-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 10px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.page-dashboard .suggest-item.active {
+    background: #EFF6FF;
+}
+
+.page-dashboard .suggest-icon {
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    background: #F1F5F9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    flex-shrink: 0;
+}
+
+.page-dashboard .suggest-text {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.page-dashboard .suggest-main {
+    font-size: 13px;
+    color: #0F172A;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.page-dashboard .suggest-main mark {
+    background: transparent;
+    color: #2563EB;
+    font-weight: 700;
+}
+
+.page-dashboard .suggest-text small {
+    font-size: 11px;
+    color: #94A3B8;
+}
+
+.page-dashboard .search-chip {
+    margin-bottom: 16px;
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    background: #EFF6FF;
+    border: 1px solid #BFDBFE;
+    color: #1E3A8A;
+    font-size: 12px;
+    padding: 8px 12px;
+    border-radius: 8px;
+}
+
+.page-dashboard .search-chip button {
+    background: transparent;
+    border: none;
+    color: #2563EB;
+    font-weight: 700;
+    font-size: 12px;
+    cursor: pointer;
 }
 
 .page-dashboard .user-nav-actions {
@@ -225,6 +452,14 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.page-dashboard .user-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 .page-dashboard .user-name {
@@ -475,6 +710,34 @@
     border-radius: 4px;
     margin-bottom: 3px;
     line-height: 1.2;
+    cursor: pointer;
+    transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease, filter 0.2s ease;
+    position: relative;
+    user-select: none;
+}
+
+.page-dashboard .event-pill:hover {
+    transform: translateY(-2px) scale(1.03);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    filter: brightness(1.05);
+}
+
+.page-dashboard .event-pill:active {
+    transform: translateY(0) scale(0.98);
+}
+
+.page-dashboard .event-pill::after {
+    content: "🔍";
+    position: absolute;
+    top: 2px;
+    right: 4px;
+    font-size: 9px;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.page-dashboard .event-pill:hover::after {
+    opacity: 0.8;
 }
 
 .page-dashboard .purple-pill { background: #F3E8FF; color: #7C3AED; }
@@ -572,7 +835,7 @@
     line-height: 1.4;
 }
 
-/* Styling Tambahan untuk SPA & Modal */
+/* Styling SPA & Transisi Kalender */
 .page-dashboard .content-section {
     animation: fadeIn 0.3s ease-in-out;
 }
@@ -582,22 +845,29 @@
     to { opacity: 1; transform: translateY(0); }
 }
 
-.page-dashboard .btn-logout-sidebar {
-    width: 100%;
-    background-color: #1E293B;
-    color: #F87171;
-    border: 1px solid #334155;
-    padding: 10px;
-    border-radius: 8px;
-    font-size: 13px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background 0.2s;
+.calendar-fade-transition {
+  animation: smoothFadeSlide 0.25s ease-in-out forwards;
 }
 
-.page-dashboard .btn-logout-sidebar:hover {
-    background-color: #7F1D1D;
-    color: #FFFFFF;
+@keyframes smoothFadeSlide {
+  0% { opacity: 0; transform: translateY(6px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+.page-dashboard #calendarTableBody {
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.page-dashboard #calendarTableBody.fade-out {
+    opacity: 0;
+    transform: translateY(6px);
+}
+
+.page-dashboard {
+    opacity: 1;
+    transition: opacity 0.25s ease-in-out;
 }
 
 /* Modal Popup Overlay */
@@ -622,7 +892,7 @@
     box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
 }
 
-/* Tombol Hapus Khusus di Tabel Agenda */
+/* Tombol Aksi */
 .page-dashboard .btn-delete {
     background-color: #FEF2F2;
     color: #DC2626;
@@ -647,7 +917,57 @@
     box-shadow: 0 2px 4px rgba(220, 38, 38, 0.2);
 }
 
-/* Tombol Close Notifikasi */
+.btn-action-delete {
+  flex: 1;
+  padding: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  background: #FEF2F2;
+  color: #DC2626;
+  border: 1px solid #FCA5A5;
+  transition: all 0.2s ease;
+}
+.btn-action-delete:hover {
+  background: #FEE2E2;
+  border-color: #EF4444;
+}
+
+.btn-action-edit {
+  flex: 1;
+  padding: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  background: #EFF6FF;
+  color: #2563EB;
+  border: 1px solid #BFDBFE;
+  transition: all 0.2s ease;
+}
+.btn-action-edit:hover {
+  background: #DBEAFE;
+  border-color: #3B82F6;
+}
+
+.btn-action-close {
+  flex: 1.2;
+  padding: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  background: #2563EB;
+  color: #FFFFFF;
+  border: 1px solid #2563EB;
+  transition: all 0.2s ease;
+}
+.btn-action-close:hover {
+  background: #1D4ED8;
+  border-color: #1D4ED8;
+}
+
 .page-dashboard .btn-close-notif {
     background: transparent;
     border: none;
@@ -661,44 +981,6 @@
 .page-dashboard .btn-close-notif:hover {
     opacity: 1;
     transform: scale(1.1);
-}
-
-/* Transisi Smooth Kalender */
-.page-dashboard #calendarTableBody {
-    transition: opacity 0.2s ease, transform 0.2s ease;
-    opacity: 1;
-    transform: translateY(0);
-}
-
-.page-dashboard #calendarTableBody.fade-out {
-    opacity: 0;
-    transform: translateY(6px);
-}
-
-/* Styling Dropdown Semester Filter */
-.page-dashboard .semester-select {
-    width: 100%;
-    background-color: #1E293B;
-    color: #F8FAFC;
-    border: 1px solid #334155;
-    border-radius: 8px;
-    padding: 8px 12px;
-    font-size: 13px;
-    font-weight: 600;
-    outline: none;
-    cursor: pointer;
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
-}
-
-.page-dashboard .semester-select:focus {
-    border-color: #3B82F6;
-    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
-}
-
-.page-dashboard .semester-select option {
-    background-color: #1E293B;
-    color: #F8FAFC;
-    padding: 8px;
 }
 
 /* STYLING MODAL DETAIL AGENDA */
@@ -926,138 +1208,62 @@
     gap: 10px;
 }
 
-/* ==========================================
-   EFEK HOVER & INDIKATOR KLIK EVENT PILL
-   ========================================== */
-.page-dashboard .event-pill {
-    cursor: pointer;
-    transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), 
-                box-shadow 0.2s ease, 
-                filter 0.2s ease;
-    position: relative;
-    user-select: none;
-}
-
-/* Efek saat kursor diarahkan ke event pill */
-.page-dashboard .event-pill:hover {
-    transform: translateY(-2px) scale(1.03);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    filter: brightness(1.05);
-}
-
-/* Efek saat event pill ditekan */
-.page-dashboard .event-pill:active {
-    transform: translateY(0) scale(0.98);
-}
-
-/* Indikator ikon kecil halus di sudut kanan saat di-hover */
-.page-dashboard .event-pill::after {
-    content: "🔍";
-    position: absolute;
-    top: 2px;
-    right: 4px;
-    font-size: 9px;
-    opacity: 0;
-    transition: opacity 0.2s ease;
-}
-
-.page-dashboard .event-pill:hover::after {
-    opacity: 0.8;
-}
-
-/* ==========================================
-   ANIMASI SMOOTH MODAL POP-IN
-   ========================================== */
+/* Animasi Modal Pop In & Slide Up */
 @keyframes modalPopIn {
-    from {
-        opacity: 0;
-        transform: scale(0.92) translateY(12px);
-    }
-    to {
-        opacity: 1;
-        transform: scale(1) translateY(0);
-    }
+    from { opacity: 0; transform: scale(0.92) translateY(12px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
 }
 
-/* Terapkan animasi saat modal dimunculkan */
 .page-dashboard .modal-overlay .modal-detail-card {
     animation: modalPopIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-/* ==========================================
-   ANIMASI SLIDE-UP MODAL DETAIL (DARI BAWAH LAYAR)
-   ========================================== */
-
-/* Mengatur overlay agar siap meluncurkan modal dari dasar layar */
 .page-dashboard #modalDetailAgenda {
-    align-items: flex-end; /* Memosisikan modal di area bawah layar */
+    align-items: flex-end;
     justify-content: center;
     padding-bottom: 0;
 }
 
-/* Penyesuaian bentuk kartu saat meluncur dari bawah */
 .page-dashboard #modalDetailAgenda .modal-detail-card {
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
     margin-bottom: 0;
 }
 
-/* Di layar komputer/desktop, beri sedikit jarak agar tidak menempel rapat di tepi bawah */
 @media (min-width: 640px) {
     .page-dashboard #modalDetailAgenda {
-        align-items: center; /* Rata tengah di komputer */
+        align-items: center;
     }
     .page-dashboard #modalDetailAgenda .modal-detail-card {
-        border-radius: 16px; /* Sudut melengkung penuh di desktop */
+        border-radius: 16px;
     }
 }
 
-/* Keyframe Animasi Meluncur dari Luar Bawah Layar */
 @keyframes slideUpFromBottom {
-    0% {
-        opacity: 0;
-        transform: translateY(100vh); /* Mulai dari bawah luar layar */
-    }
-    100% {
-        opacity: 1;
-        transform: translateY(0); /* Berhenti di posisi normal */
-    }
+    0% { opacity: 0; transform: translateY(100vh); }
+    100% { opacity: 1; transform: translateY(0); }
 }
 
-/* Jalankan animasi saat modal dibuka (display: flex) */
 .page-dashboard #modalDetailAgenda .modal-detail-card {
     animation: slideUpFromBottom 0.38s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-/* Transisi Smooth Antarhalaman */
-.page-dashboard {
-    opacity: 1;
-    transition: opacity 0.25s ease-in-out;
+/* Dropdown menimpa halaman di desktop */
+@media (min-width: 901px) {
+    .page-dashboard .top-navbar {
+        position: relative;
+        z-index: 60;
+    }
 }
 
 /* ==========================================
-   RESPONSIF - DASHBOARD
+   RESPONSIF - DASHBOARD (MOBILE & TABLET)
    ========================================== */
-/* Elemen khusus mobile: tersembunyi di desktop */
-.page-dashboard .menu-toggle {
-    display: none;
-    flex-shrink: 0;
-    width: 38px;
-    height: 38px;
-    align-items: center;
-    justify-content: center;
-    background: #F8FAFC;
-    border: 1px solid #E2E8F0;
-    border-radius: 8px;
-    font-size: 18px;
-    cursor: pointer;
-}
 
 .page-dashboard .sidebar-backdrop {
     display: none;
 }
 
-/* Tablet & HP: sidebar menjadi drawer geser */
 @media (max-width: 900px) {
     .page-dashboard .app-container {
         display: block;
@@ -1069,32 +1275,50 @@
         overflow: visible;
     }
 
-    .page-dashboard .menu-toggle {
-        display: inline-flex;
-    }
-
+    /* Penyesuaian Flex Navbar di Mobile */
     .page-dashboard .top-navbar {
         position: sticky;
         top: 0;
         z-index: 50;
-        padding: 10px 16px;
-        gap: 10px;
+        padding: 12px 16px;
+        gap: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: nowrap; /* Mencegah item turun baris */
     }
 
+    /* Tampilkan Tombol Hamburger */
+    .page-dashboard .menu-toggle {
+        display: inline-flex;
+    }
+
+    /* Menyembunyikan nama panjang dan role agar area profil menjadi muat */
+    .page-dashboard .user-profile > div:not(.user-avatar),
+    .page-dashboard .user-name,
+    .page-dashboard .user-role {
+        display: none !important;
+    }
+
+    /* Kolom Search jadi flex agar lebar responsif */
     .page-dashboard .search-container {
         flex: 1;
         width: auto;
         min-width: 0;
     }
+    
+    .page-dashboard .search-input {
+        width: 100%;
+        font-size: 14px; /* Mencegah auto-zoom input di Safari iOS */
+        padding: 9px 32px 9px 32px; /* Disesuaikan icon */
+    }
 
     .page-dashboard .user-nav-actions {
-        gap: 10px;
+        gap: 12px;
+        flex-shrink: 0; /* Hindari area notif/avatar mengecil */
     }
 
-    .page-dashboard .user-info {
-        display: none;
-    }
-
+    /* Drawer Sidebar untuk Mobile */
     .page-dashboard .sidebar {
         position: fixed;
         top: 0;
@@ -1293,7 +1517,6 @@
         overflow-y: auto;
     }
 
-    /* 16px mencegah iOS memperbesar layar otomatis saat input difokus */
     .page-dashboard input,
     .page-dashboard select {
         font-size: 16px;
@@ -1363,292 +1586,220 @@
     }
 }
 
-/* Sidebar Kiri - Dikunci agar pas di layar dan tidak bisa di-scroll */
-.page-dashboard .sidebar {
-    width: 260px;
-    height: 100vh; /* Kunci tinggi penuh sesuai layar */
-    max-height: 100vh;
-    background-color: #0F172A;
-    color: #94A3B8;
-    padding: 20px 16px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    position: sticky;
-    top: 0;
-    overflow: hidden; /* Mencegah kemunculan scrollbar di sidebar */
-    flex-shrink: 0;
-}
-
-/* Styling Utama Dashboard & Kalender */
-.category-hover-item:hover {
-  background-color: #1E293B;
-  color: #FFFFFF;
-  transition: background-color 0.2s ease;
-}
-
-.calendar-fade-transition {
-  animation: smoothFadeSlide 0.25s ease-in-out forwards;
-}
-
-@keyframes smoothFadeSlide {
-  0% {
-    opacity: 0;
-    transform: translateY(6px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* Efek Hover & Transisi Tombol Aksi Detail Agenda */
-.btn-action-delete {
-  flex: 1;
-  padding: 10px;
-  font-size: 13px;
-  font-weight: 600;
-  border-radius: 8px;
-  cursor: pointer;
-  background: #FEF2F2;
-  color: #DC2626;
-  border: 1px solid #FCA5A5;
-  transition: all 0.2s ease;
-}
-.btn-action-delete:hover {
-  background: #FEE2E2;
-  border-color: #EF4444;
-}
-
-.btn-action-edit {
-  flex: 1;
-  padding: 10px;
-  font-size: 13px;
-  font-weight: 600;
-  border-radius: 8px;
-  cursor: pointer;
-  background: #EFF6FF;
-  color: #2563EB;
-  border: 1px solid #BFDBFE;
-  transition: all 0.2s ease;
-}
-.btn-action-edit:hover {
-  background: #DBEAFE;
-  border-color: #3B82F6;
-}
-
-.btn-action-close {
-  flex: 1.2;
-  padding: 10px;
-  font-size: 13px;
-  font-weight: 600;
-  border-radius: 8px;
-  cursor: pointer;
-  background: #2563EB;
-  color: #FFFFFF;
-  border: 1px solid #2563EB;
-  transition: all 0.2s ease;
-}
-.btn-action-close:hover {
-  background: #1D4ED8;
-  border-color: #1D4ED8;
-}
-.user-avatar {
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
-  overflow: hidden;
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: #0F172A;
-  color: #FFFFFF;
-  font-weight: 700;
-  font-size: 14px;
-}
-
-.user-avatar img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover; /* Membuat gambar tetap proporsional dan mengisi lingkaran tanpa gepeng */
-}
-/* Perbaikan wadah profil agar elemen anak tertata rapi */
-.sidebar .user-profile {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  overflow: hidden; /* Mencegah elemen keluar dari batas */
-  width: 100%;
-}
-
-/* Lingkaran Avatar agar tidak gepeng dan tidak menyusut */
-.sidebar .user-avatar {
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
-  overflow: hidden;
-  flex-shrink: 0; /* Menjaga ukuran lingkaran tetap bulat sempurna */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: #0F172A;
-  color: #FFFFFF;
-  font-weight: 700;
-  font-size: 14px;
-}
-
-.sidebar .user-avatar img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-/* Area teks nama agar teks panjang menyesuaikan atau terpotong rapi */
-.sidebar .user-profile > div:not(.user-avatar) {
-  min-width: 0; /* Penting agar flexbox anak bisa mengecil dan teks terpotong dengan benar */
-  flex: 1;
-}
-
-.sidebar .user-name {
-  font-size: 12px;
-  font-weight: 600;
-  color: #FFFFFF;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis; /* Membuat teks email yang panjang menjadi berakhiran titik-titik (...) */
-}
-
-.sidebar .user-role {
-  font-size: 11px;
-  color: #94A3B8;
-}
-
-/* ===== Pencarian dengan saran ===== */
-.page-dashboard .search-input {
-    padding-right: 32px;
-}
-
-.page-dashboard .search-input:focus {
-    border-color: #2563EB;
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
-    background: #FFFFFF;
-}
-
-.page-dashboard .search-clear {
-    position: absolute;
-    right: 8px;
-    top: 50%;
-    transform: translateY(-50%);
-    background: #E2E8F0;
-    border: none;
-    color: #475569;
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    font-size: 10px;
-    line-height: 1;
-    cursor: pointer;
-}
-
-.page-dashboard .search-suggest {
-    position: absolute;
-    top: calc(100% + 6px);
-    left: 0;
-    right: 0;
-    background: #FFFFFF;
-    border: 1px solid #E2E8F0;
-    border-radius: 12px;
-    box-shadow: 0 12px 30px -8px rgba(15, 23, 42, 0.25);
-    list-style: none;
-    margin: 0;
-    padding: 6px;
-    z-index: 200;
-}
-
-.page-dashboard .search-empty {
-    padding: 14px;
-    font-size: 12px;
-    color: #64748B;
-}
-
-.page-dashboard .suggest-item {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 8px 10px;
-    border-radius: 8px;
-    cursor: pointer;
-}
-
-.page-dashboard .suggest-item.active {
-    background: #EFF6FF;
-}
-
-.page-dashboard .suggest-icon {
-    width: 28px;
-    height: 28px;
-    border-radius: 8px;
-    background: #F1F5F9;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 13px;
-    flex-shrink: 0;
-}
-
-.page-dashboard .suggest-text {
-    display: flex;
-    flex-direction: column;
+/* Memastikan teks nama di sidebar DALAM drawer mobile tetap tampil normal */
+.page-dashboard .sidebar .user-profile > div:not(.user-avatar) {
+    display: block !important;
     min-width: 0;
+    flex: 1;
+    overflow: hidden;
 }
 
-.page-dashboard .suggest-main {
-    font-size: 13px;
-    color: #0F172A;
+.page-dashboard .sidebar .user-name {
+    display: block !important;
+    font-size: 12px;
+    font-weight: 600;
+    color: #FFFFFF;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
 
-.page-dashboard .suggest-main mark {
-    background: transparent;
-    color: #2563EB;
-    font-weight: 700;
-}
-
-.page-dashboard .suggest-text small {
+.page-dashboard .sidebar .user-role {
+    display: block !important;
     font-size: 11px;
     color: #94A3B8;
 }
 
-.page-dashboard .search-chip {
-    margin-bottom: 16px;
-    display: inline-flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 10px;
-    background: #EFF6FF;
-    border: 1px solid #BFDBFE;
-    color: #1E3A8A;
-    font-size: 12px;
-    padding: 8px 12px;
-    border-radius: 8px;
-}
-
-.page-dashboard .search-chip button {
-    background: transparent;
-    border: none;
-    color: #2563EB;
-    font-weight: 700;
-    font-size: 12px;
+/* Efek interaktif saat profil diklik / di-hover */
+.page-dashboard .clickable-profile {
     cursor: pointer;
+    border-radius: 8px;
+    padding: 4px;
+    transition: background-color 0.2s ease;
 }
 
-/* Agar dropdown menimpa isi halaman di desktop (di mobile navbar sudah sticky z-index 50) */
-@media (min-width: 901px) {
-    .page-dashboard .top-navbar {
-        position: relative;
-        z-index: 60;
+.page-dashboard .sidebar .clickable-profile:hover {
+    background-color: #1E293B;
+}
+
+.page-dashboard .top-navbar .clickable-profile:hover {
+    background-color: #F1F5F9;
+}
+
+/* Memastikan teks nama akun di sidebar selalu tampil normal dan tidak tersembunyi */
+.page-dashboard .sidebar .user-profile > div:not(.user-avatar) {
+    display: block !important;
+    min-width: 0;
+    flex: 1;
+    overflow: hidden;
+}
+
+.page-dashboard .sidebar .user-name {
+    display: block !important;
+    font-size: 12px;
+    font-weight: 600;
+    color: #FFFFFF;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.page-dashboard .sidebar .user-role {
+    display: block !important;
+    font-size: 11px;
+    color: #94A3B8;
+}
+
+/* ================= STYLING KARTU NOTIFIKASI MODERN ================= */
+.page-dashboard .notif-list-container {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.page-dashboard .notif-card-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 18px 20px;
+    border-radius: 14px;
+    border: 1px solid;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    background: #FFFFFF;
+}
+
+.page-dashboard .notif-card-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+}
+
+/* Varian Warna Kartu Berdasarkan Tipe */
+.page-dashboard .notif-conflict {
+    background-color: #FEF2F2;
+    border-color: #FCA5A5;
+}
+
+.page-dashboard .notif-missed {
+    background-color: #FFFBEB;
+    border-color: #FDE68A;
+}
+
+.page-dashboard .notif-reminder {
+    background-color: #EFF6FF;
+    border-color: #BFDBFE;
+}
+
+.page-dashboard .notif-icon-box {
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.7);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.04);
+}
+
+.page-dashboard .notif-content-box {
+    flex: 1;
+    min-width: 0;
+}
+
+.page-dashboard .notif-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 6px;
+    flex-wrap: wrap;
+}
+
+.page-dashboard .notif-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: #0F172A;
+}
+
+.page-dashboard .notif-badge-time {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.8);
+    color: #334155;
+    border: 1px solid rgba(0,0,0,0.05);
+    white-space: nowrap;
+}
+
+.page-dashboard .notif-desc {
+    font-size: 13px;
+    color: #475569;
+    margin: 0;
+    line-height: 1.5;
+}
+
+.page-dashboard .notif-action-box {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+}
+
+.page-dashboard .notif-btn-action {
+    padding: 9px 16px;
+    font-size: 12px;
+    font-weight: 600;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 0.2s, transform 0.1s;
+}
+
+.page-dashboard .notif-btn-action:active {
+    transform: scale(0.97);
+}
+
+.page-dashboard .btn-action-conflict {
+    background: #DC2626;
+    color: #FFFFFF;
+}
+
+.page-dashboard .btn-action-conflict:hover {
+    background: #B91C1C;
+}
+
+.page-dashboard .btn-action-completed {
+    background: #10B981;
+    color: #FFFFFF;
+}
+
+.page-dashboard .btn-action-completed:hover {
+    background: #059669;
+}
+
+/* Responsif untuk Layar HP / Mobile */
+@media (max-width: 768px) {
+    .page-dashboard .notif-card-item {
+        flex-direction: column;
+        gap: 12px;
+        padding: 16px;
+    }
+
+    .page-dashboard .notif-header-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+    }
+
+    .page-dashboard .notif-action-box {
+        width: 100%;
+        margin-top: 4px;
+    }
+
+    .page-dashboard .notif-btn-action {
+        width: 100%;
+        text-align: center;
+        padding: 11px;
     }
 }
