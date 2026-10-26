@@ -15,6 +15,9 @@ const isLoading = ref(true)
 const activeTab = ref('dashboard')
 const showLogoutModal = ref(false)
 
+// State untuk Sidebar Mobile
+const sidebarOpen = ref(false)
+
 const modalState = ref({
   show: false,
   title: '',
@@ -430,10 +433,10 @@ const filteredAgendas = computed(() => {
 // ===== PENCARIAN DENGAN SARAN =====
 const SUGGEST_ICON = { agenda: '📖', lokasi: '📍', dosen: '👤', kategori: '🏷️' }
 
-const searchInput = ref('')   // isi kotak cari (berubah tiap ketikan)
-const searchQuery = ref('')   // kata kunci yang diterapkan ke Daftar Agenda
-const searchOpen = ref(false) // dropdown saran terbuka?
-const searchActive = ref(-1)  // saran yang sedang disorot (panah atas/bawah)
+const searchInput = ref('')
+const searchQuery = ref('')
+const searchOpen = ref(false)
+const searchActive = ref(-1)
 
 const suggestions = computed(() => buildSuggestions(agendas.value, searchInput.value))
 const searchedAgendas = computed(() =>
@@ -445,7 +448,6 @@ const part = (text) => splitMatch(text, searchInput.value)
 function onSearchInput() {
   searchActive.value = -1
   searchOpen.value = searchInput.value.trim().length > 0
-  // Di tab Daftar Agenda, hasil ikut berubah saat mengetik
   if (activeTab.value === 'agenda') searchQuery.value = searchInput.value.trim()
 }
 
@@ -486,7 +488,6 @@ function onSearchFocus() {
 }
 
 function onSearchBlur() {
-  // jeda singkat agar klik pada saran sempat diproses
   setTimeout(() => { searchOpen.value = false }, 150)
 }
 
@@ -541,7 +542,11 @@ function cancelLogout() {
 </script>
 
 <template>
-  <div class="page-dashboard">
+  <div class="page-dashboard" :class="{ 'sidebar-open': sidebarOpen }">
+    
+    <!-- Latar gelap untuk menutupi layar saat sidebar mobile terbuka -->
+    <div class="sidebar-backdrop" @click="sidebarOpen = false"></div>
+    
     <div class="app-container">
       
       <!-- SIDEBAR KIRI -->
@@ -554,17 +559,17 @@ function cancelLogout() {
 
           <ul class="sidebar-menu">
             <li>
-              <a href="#" class="menu-item" :class="{ active: activeTab === 'dashboard' }" @click.prevent="activeTab = 'dashboard'">
+              <a href="#" class="menu-item" :class="{ active: activeTab === 'dashboard' }" @click.prevent="activeTab = 'dashboard'; sidebarOpen = false">
                 <span>📊</span> Dashboard
               </a>
             </li>
             <li>
-              <a href="#" class="menu-item" :class="{ active: activeTab === 'agenda' }" @click.prevent="activeTab = 'agenda'">
+              <a href="#" class="menu-item" :class="{ active: activeTab === 'agenda' }" @click.prevent="activeTab = 'agenda'; sidebarOpen = false">
                 <span>📋</span> Agenda Kuliah
               </a>
             </li>
             <li>
-              <a href="#" class="menu-item" :class="{ active: activeTab === 'notifikasi' }" @click.prevent="activeTab = 'notifikasi'" style="position: relative;">
+              <a href="#" class="menu-item" :class="{ active: activeTab === 'notifikasi' }" @click.prevent="activeTab = 'notifikasi'; sidebarOpen = false" style="position: relative;">
                 <span>🔔</span> Notifikasi
                 <span v-if="automatedNotifications.length > 0" style="position: absolute; right: 12px; background: #EF4444; color: #FFFFFF; font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 10px;">
                   {{ automatedNotifications.length }}
@@ -572,7 +577,7 @@ function cancelLogout() {
               </a>
             </li>
             <li>
-              <router-link to="/profil" class="menu-item">
+              <router-link to="/profil" class="menu-item" @click="sidebarOpen = false">
                 <span>⚙️</span> Pengaturan Profil
               </router-link>
             </li>
@@ -581,7 +586,7 @@ function cancelLogout() {
           <div class="sidebar-section-title" style="display: flex; justify-content: space-between; align-items: center;">
             <span>TAHUN AKADEMIK</span>
             <button 
-              @click="showAddYearModal = true" 
+              @click="showAddYearModal = true; sidebarOpen = false" 
               style="background: none; border: none; color: #60A5FA; cursor: pointer; font-size: 11px; font-weight: 600;"
             >
               + Tambah
@@ -644,25 +649,33 @@ function cancelLogout() {
             </div>
           </div>
 
+          <!-- Bagian Footer Sidebar -->
           <div class="sidebar-footer" style="margin-top: 16px; padding-top: 16px; border-top: 1px solid #1E293B;">
-            <div class="user-profile" style="margin-bottom: 12px;">
-              <div class="user-avatar" style="overflow: hidden; display: flex; align-items: center; justify-content: center;">
-                <img v-if="userAvatar" :src="userAvatar" alt="Avatar" style="width: 100%; height: 100%; object-fit: cover;" />
-                <span v-else>{{ currentUser.charAt(0).toUpperCase() || 'M' }}</span>
-              </div>
-              <div>
-                <div class="user-name" style="color: #FFFFFF;">{{ currentUser || 'Mahasiswa' }}</div>
-                <div class="user-role">Akun Aktif</div>
-              </div>
+          <router-link to="/profil" class="user-profile clickable-profile" style="margin-bottom: 12px; display: flex; align-items: center; gap: 10px; text-decoration: none;">
+            <div class="user-avatar">
+              <img v-if="userAvatar" :src="userAvatar" alt="Avatar" />
+              <span v-else>{{ currentUser ? currentUser.charAt(0).toUpperCase() : 'M' }}</span>
             </div>
-            <button class="btn-logout-sidebar" @click="confirmLogout">Keluar</button>
-          </div>
+            <div style="min-width: 0; flex: 1; overflow: hidden;">
+              <div class="user-name" style="font-size: 12px; font-weight: 600; color: #FFFFFF; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                {{ currentUser || 'Mahasiswa' }}
+              </div>
+              <div class="user-role" style="font-size: 11px; color: #94A3B8;">Akun Aktif</div>
+            </div>
+          </router-link>
+          <button class="btn-logout-sidebar" @click="confirmLogout">Keluar</button>
+        </div>
         </div>
       </aside>
 
       <!-- KONTEN UTAMA -->
       <main class="main-content">
         <header class="top-navbar">
+          <!-- Tombol Hamburger Mobile -->
+          <button class="menu-toggle" aria-label="Buka Menu" @click="sidebarOpen = !sidebarOpen">
+            ☰
+          </button>
+
           <div class="search-container">
             <span class="search-icon">🔍</span>
             <input
@@ -705,21 +718,24 @@ function cancelLogout() {
               Tidak ada agenda yang cocok dengan “{{ searchInput.trim() }}”.
             </div>
           </div>
+          
           <div class="user-nav-actions">
             <button class="notif-btn" @click="activeTab = 'notifikasi'" title="Notifikasi" style="position: relative;">
               🔔
               <span v-if="automatedNotifications.length > 0" style="position: absolute; top: 4px; right: 4px; width: 8px; height: 8px; background: #EF4444; border-radius: 50%;"></span>
             </button>
-            <div class="user-profile">
-              <div class="user-avatar" style="overflow: hidden; display: flex; align-items: center; justify-content: center;">
-                <img v-if="userAvatar" :src="userAvatar" alt="Avatar" style="width: 100%; height: 100%; object-fit: cover;" />
-                <span v-else>{{ currentUser.charAt(0).toUpperCase() || 'M' }}</span>
+            
+            <!-- Profil di Top Navbar (Bisa diklik menuju /profil) -->
+            <router-link to="/profil" class="user-profile clickable-profile" style="text-decoration: none;">
+              <div class="user-avatar">
+                <img v-if="userAvatar" :src="userAvatar" alt="Avatar" />
+                <span v-else>{{ currentUser ? currentUser.charAt(0).toUpperCase() : 'M' }}</span>
               </div>
-              <div>
+              <div class="user-info">
                 <div class="user-name">{{ currentUser || 'Mahasiswa' }}</div>
                 <div class="user-role">Mahasiswa Aktif</div>
               </div>
-            </div>
+            </router-link>
           </div>
         </header>
 
@@ -923,6 +939,7 @@ function cancelLogout() {
           </div>
 
           <!-- TAB 3: NOTIFIKASI OTOMATIS -->
+          <!-- TAB 3: NOTIFIKASI OTOMATIS -->
           <div v-if="activeTab === 'notifikasi'" class="content-section">
             <div class="welcome-banner">
               <div>
@@ -937,34 +954,35 @@ function cancelLogout() {
                 🎉 Tidak ada pemberitahuan atau peringatan saat ini. Semua jadwal aman!
               </div>
 
-              <div v-else style="display: flex; flex-direction: column; gap: 12px;">
+              <div v-else class="notif-list-container">
                 <div 
                   v-for="notif in automatedNotifications" 
                   :key="notif.id" 
-                  style="display: flex; align-items: flex-start; justify-content: space-between; gap: 14px; padding: 16px; border-radius: 10px; border: 1px solid;"
-                  :style="notif.type === 'conflict' ? 'background: #FEF2F2; border-color: #FCA5A5;' : notif.type === 'missed' ? 'background: #FFFBEB; border-color: #FDE68A;' : 'background: #EFF6FF; border-color: #BFDBFE;'"
+                  class="notif-card-item"
+                  :class="{
+                    'notif-conflict': notif.type === 'conflict',
+                    'notif-missed': notif.type === 'missed',
+                    'notif-reminder': notif.type === 'reminder'
+                  }"
                 >
-                  <div style="display: flex; align-items: flex-start; gap: 14px; flex: 1;">
-                    <span style="font-size: 26px;">{{ notif.icon }}</span>
-                    <div style="flex: 1;">
-                      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
-                        <strong :style="notif.type === 'conflict' ? 'color: #991B1B;' : notif.type === 'missed' ? 'color: #92400E;' : 'color: #1E40AF;'" style="font-size: 15px;">
-                          {{ notif.title }}
-                        </strong>
-                        <span style="font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 6px;" :style="notif.type === 'conflict' ? 'background: #FEE2E2; color: #991B1B;' : notif.type === 'missed' ? 'background: #FEF3C7; color: #92400E;' : 'background: #DBEAFE; color: #1E40AF;'">
-                          {{ notif.timeInfo }}
-                        </span>
-                      </div>
-                      <p style="font-size: 13px; color: #334155; margin: 0; line-height: 1.4;">{{ notif.desc }}</p>
-                    </div>
+                  <div class="notif-icon-box">
+                    <span style="font-size: 22px;">{{ notif.icon }}</span>
                   </div>
 
-                  <div style="display: flex; align-items: center;">
+                  <div class="notif-content-box">
+                    <div class="notif-header-row">
+                      <span class="notif-title">{{ notif.title }}</span>
+                      <span class="notif-badge-time">{{ notif.timeInfo }}</span>
+                    </div>
+                    <p class="notif-desc">{{ notif.desc }}</p>
+                  </div>
+
+                  <div class="notif-action-box">
                     <button 
                       v-if="notif.isConflict"
                       type="button" 
+                      class="notif-btn-action btn-action-conflict"
                       @click="editConflictAgenda(notif.conflictTime, notif.conflictDate)" 
-                      style="padding: 8px 14px; background: #DC2626; color: #FFFFFF; font-size: 12px; font-weight: 600; border: none; border-radius: 8px; cursor: pointer; white-space: nowrap; transition: background 0.2s;"
                       title="Edit jadwal yang bentrok"
                     >
                       ✏️ Edit Jadwal
@@ -973,8 +991,8 @@ function cancelLogout() {
                     <button 
                       v-else
                       type="button" 
+                      class="notif-btn-action btn-action-completed"
                       @click="markAsCompleted(notif.agendaKey)" 
-                      style="padding: 8px 14px; background: #10B981; color: #FFFFFF; font-size: 12px; font-weight: 600; border: none; border-radius: 8px; cursor: pointer; white-space: nowrap; transition: background 0.2s;"
                       title="Konfirmasi selesai agar tidak diingatkan lagi"
                     >
                       ✓ Selesai
