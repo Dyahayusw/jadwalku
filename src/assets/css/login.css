@@ -12,6 +12,17 @@
     width: 100vw;
     overflow: hidden;
     background-color: #ffffff;
+    
+    /* Transisi untuk animasi perpindahan halaman */
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Efek saat login berhasil (fade-out dan sedikit terangkat) */
+.page-login.fade-out {
+    opacity: 0;
+    transform: translateY(-10px);
 }
 
 /* ================= SIDEBAR KIRI (GELAP) ================= */
@@ -263,6 +274,11 @@
 
 .page-login .btn-submit:hover {
     background-color: #1D4ED8;
+}
+
+.page-login .btn-submit:disabled {
+    background-color: #94A3B8;
+    cursor: not-allowed;
 }
 
 /* Responsif untuk layar kecil/tablet */
