@@ -128,6 +128,11 @@
     border: 1px solid #BFDBFE;
 }
 
+.page-landing .hero-badge span {
+    display: inline-flex;
+    align-items: center;
+}
+
 .page-landing .hero-left h1 {
     font-size: 44px;
     font-weight: 700;
@@ -346,6 +351,7 @@
     width: 36px;
     height: 36px;
     background-color: #EFF6FF;
+    color: #2563EB;
     border-radius: 8px;
     display: flex;
     align-items: center;
