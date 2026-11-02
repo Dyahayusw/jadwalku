@@ -93,7 +93,7 @@ watch(
               </span>
 
               <div class="detail-value">
-                HARI TEST: {{ tanggal }}
+                {{ tanggal }}
                 <br />
                 <small>DEBUG: {{ props.event.date }}</small>
               </div>
