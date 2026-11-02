@@ -94,6 +94,8 @@ watch(
 
               <div class="detail-value">
                 {{ tanggal }}
+                <br />
+                <small>DEBUG: {{ props.event.date }}</small>
               </div>
             </div>
           </div>
