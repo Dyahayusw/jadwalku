@@ -746,6 +746,11 @@
 .page-dashboard .orange-pill { background: #FFFBEB; color: #D97706; }
 .page-dashboard .red-pill { background: #FEF2F2; color: #DC2626; }
 
+/* Warna kategori agenda */
+.page-dashboard .category-kuliah, .page-dashboard .badge-category.category-kuliah { background: #F3E8FF; color: #7C3AED; border-color: #DDD6FE; }
+.page-dashboard .category-organisasi, .page-dashboard .badge-category.category-organisasi { background: #DBEAFE; color: #1D4ED8; border-color: #BFDBFE; }
+.page-dashboard .category-tugas, .page-dashboard .badge-category.category-tugas { background: #DCFCE7; color: #15803D; border-color: #BBF7D0; }
+
 /* Right Sidebar Panel */
 .page-dashboard .right-sidebar-panel {
     background: #FFFFFF;

@@ -4,12 +4,25 @@ import { useRouter } from 'vue-router'
 import { getSessionUser, logout } from '../stores/session'
 import { supabase } from '../utils/supabase'
 import '../assets/css/dashboard.css'
+import { formatTanggalPanjang } from '../utils/format'
 
 const router = useRouter()
 const currentUser = ref('')
 const userAvatar = ref(null)
 const agendas = ref([])
 const isLoading = ref(true)
+
+// Warna kategori agenda: Kuliah (ungu), Organisasi (biru), Tugas (hijau)
+function getCategoryClass(category) {
+  const value = (category || '').toLowerCase()
+  if (value.includes('organisasi')) return 'category-organisasi'
+  if (value.includes('tugas')) return 'category-tugas'
+  return 'category-kuliah'
+}
+
+function getDayAndDate(date) {
+  return date ? formatTanggalPanjang(date) : '-'
+}
 
 const activeTab = ref('dashboard')
 const showLogoutModal = ref(false)
@@ -504,7 +517,7 @@ function executeLogout() { logout(); router.push('/login') }
                         <td v-for="(day, dayIndex) in week" :key="dayIndex">
                           <template v-if="day">
                             <span class="date-num" :class="{ 'today-circle': isToday(day) }">{{ day }}</span>
-                            <div v-for="item in getAgendasForDate(day)" :key="item.id" class="event-pill blue-pill" @click="openAgendaDetail(item)">{{ item.title }}</div>
+                            <div v-for="item in getAgendasForDate(day)" :key="item.id" :class="['event-pill', getCategoryClass(item.category)]" @click="openAgendaDetail(item)">{{ item.title }}</div>
                           </template>
                           <template v-else><span class="date-num text-muted">-</span></template>
                         </td>
@@ -547,7 +560,7 @@ function executeLogout() { logout(); router.push('/login') }
                     <div style="font-weight: 700; font-size: 15px; color: #0F172A;">{{ item.title }}</div>
                     <div style="font-size: 13px; color: #64748B;">📍 {{ item.location || '-' }} • ⏰ {{ item.time }} • Kategori: {{ item.category }}</div>
                   </div>
-                  <div><span class="event-pill blue-pill">{{ item.date }}</span></div>
+                  <div><span class="event-pill" :class="getCategoryClass(item.category)">{{ item.date }}</span></div>
                 </div>
               </div>
             </div>
@@ -584,12 +597,12 @@ function executeLogout() { logout(); router.push('/login') }
     <div v-if="showDetailModal" class="modal-overlay" id="modalDetailAgenda">
       <div class="modal-detail-card">
         <div class="modal-detail-header">
-          <div class="modal-header-top"><span class="badge-category">{{ selectedAgendaDetail?.category }}</span><button class="btn-close-circle" @click="closeAgendaDetail">✕</button></div>
+          <div class="modal-header-top"><span class="badge-category" :class="getCategoryClass(selectedAgendaDetail?.category)">{{ selectedAgendaDetail?.category }}</span><button class="btn-close-circle" @click="closeAgendaDetail">✕</button></div>
           <h3>{{ selectedAgendaDetail?.title }}</h3><p>Detail lengkap informasi agenda kegiatan Anda</p>
         </div>
         <div class="modal-detail-body">
           <div class="detail-grid-two">
-            <div class="detail-box"><span class="detail-box-icon">📅</span><div><span class="detail-label">Tanggal</span><span class="detail-value">{{ selectedAgendaDetail?.date }}</span></div></div>
+            <div class="detail-box"><span class="detail-box-icon">📅</span><div><span class="detail-label">Tanggal</span><span class="detail-value">{{ getDayAndDate(selectedAgendaDetail?.date) }}</span></div></div>
             <div class="detail-box"><span class="detail-box-icon">⏰</span><div><span class="detail-label">Waktu</span><span class="detail-value">{{ selectedAgendaDetail?.time }}</span></div></div>
           </div>
           <div class="detail-info-list">
