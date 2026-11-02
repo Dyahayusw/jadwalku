@@ -471,6 +471,7 @@ async function handleAddAgenda() {
                 <select v-model="reminder">
                   <option value="30 menit sebelumnya">30 menit sebelumnya</option>
                   <option value="1 jam sebelumnya">1 jam sebelumnya</option>
+                  <option value="1 Hari sebelumnya">1 hari sebelumnya (H-1)</option>
                   <option value="Tidak ada">Tidak ada</option>
                 </select>
               </div>
