@@ -16,11 +16,18 @@ const showSuccessModal = ref(false)
 
 async function handleRegister() {
   const inputName = name.value.trim()
-  const inputEmail = email.value.trim()
+  const inputEmail = email.value.trim().toLowerCase()
   const inputPassword = password.value.trim()
 
   isLoading.value = true
   errorMessage.value = ''
+
+  // 🚀 Validasi tambahan: Hanya mengizinkan domain @gmail.com
+  if (!inputEmail.endsWith('@gmail.com')) {
+    errorMessage.value = 'Pendaftaran hanya diizinkan menggunakan akun Gmail (@gmail.com).'
+    isLoading.value = false
+    return
+  }
 
   try {
     const { data: existingUser } = await supabase
@@ -169,7 +176,9 @@ function closeModalAndRedirect() {
               v-model="email"
               type="email"
               class="form-input"
-              placeholder="nama@email.com"
+              placeholder="nama@gmail.com"
+              pattern=".+@gmail\.com$"
+              title="Gunakan alamat email berakhiran @gmail.com"
               required
             >
           </div>
