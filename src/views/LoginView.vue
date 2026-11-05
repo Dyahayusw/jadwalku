@@ -84,7 +84,7 @@ async function handleLogin() {
   }
 }
 
-// 🚀 FUNGSI GOOGLE LOGIN: Mengarahkan kembali ke /login untuk divalidasi
+// 🚀 FUNGSI GOOGLE LOGIN: Menggunakan window.location.origin agar dinamis di Vercel/Localhost
 async function handleGoogleLogin() {
   try {
     const { error } = await supabase.auth.signInWithOAuth({
